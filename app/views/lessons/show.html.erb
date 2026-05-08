@@ -1,0 +1,129 @@
+<style>
+  .tutorial-wrapper {
+    max-width: 850px;
+    margin: 2rem auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1e293b;
+  }
+
+  /* Navigation */
+  .top-nav {
+    margin-bottom: 2rem;
+  }
+
+  .home-link {
+    text-decoration: none;
+    color: #64748b;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Metadata Labels */
+  .label-header {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #94a3b8; /* Neutral Gray */
+    margin-bottom: 0.5rem;
+  }
+
+  /* Content Well */
+  .content-well {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 2.5rem;
+    border-radius: 12px;
+    line-height: 1.8;
+    font-size: 1.1rem;
+  }
+
+  /* Syntax Highlighting */
+  .ruby-code {
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-weight: 500;
+    color: inherit; /* Removed Red - matches surrounding text */
+    background: #f8fafc;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+  .terminal-highlight {
+    color: #38bdf8; /* Baby Blue */
+    font-family: "SFMono-Regular", Consolas, monospace;
+    font-weight: 600;
+  }
+
+  /* Footer Navigation */
+  .nav-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .btn {
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .btn-primary { background: #4f46e5; color: white; }
+  .btn-secondary { background: white; color: #64748b; border: 1px solid #e2e8f0; }
+</style>
+
+<div class="tutorial-wrapper">
+  
+  <nav class="top-nav">
+    <%= link_to lessons_path, class: "home-link" do %>
+      Back to Lessons
+    <% end %>
+  </nav>
+
+  <div style="margin-bottom: 2rem;">
+    <span class="label-header">Title</span>
+    <h1 style="margin:0; font-size: 2.5rem; font-weight: 800;"><%= @lesson.title %></h1>
+  </div>
+
+  <div style="margin-bottom: 2.5rem;">
+    <span class="label-header">Content</span>
+    <div class="content-well">
+      <%# Regex: Backticks get a neutral code font, $ lines get blue commands %>
+      <% highlighted_content = @lesson.content
+          .gsub(/`([^`]+)`/, '<span class="ruby-code">\1</span>') 
+          .gsub(/\$ ([^\n\r]+)/, '$ <span class="terminal-highlight">\1</span>') 
+      %>
+      <%= simple_format(highlighted_content, {}, sanitize: false) %>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 40px; margin-bottom: 3rem;">
+    <div>
+      <span class="label-header">Section</span>
+      <span style="font-weight: 600;"><%= @lesson.section %></span>
+    </div>
+    <div>
+      <span class="label-header">Order</span>
+      <span style="color: #64748b;">Step #<%= @lesson.order %></span>
+    </div>
+  </div>
+
+  <footer class="nav-footer">
+    <div>
+      <% if @previous_lesson %>
+        <%= link_to "← #{@previous_lesson.title}", lesson_path(@previous_lesson), class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+    <div>
+      <% if @next_lesson %>
+        <%= link_to "#{@next_lesson.title} →", lesson_path(@next_lesson), class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  </footer>
+
+</div>
